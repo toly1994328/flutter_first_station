@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'guess_app_bar.dart';
+import 'result_notice.dart';
 
 class GuessPage extends StatefulWidget {
   const GuessPage({super.key, required this.title});
@@ -26,77 +28,22 @@ class _GuessPageState extends State<GuessPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-      AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-            statusBarColor: Colors.transparent
-        ),
-        // leadingWidth: 54,
-        titleSpacing: 0,
-
-        leading: Icon(Icons.menu, color: Colors.black,),
-        actions: [
-          IconButton(
-              splashRadius: 20,
-              onPressed: (){}, icon: Icon(
-            Icons.run_circle_outlined,
-            color: Colors.blue,
-          ))
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title:
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-              filled: true,
-              fillColor: Color(0xffF3F6F9),
-              constraints: BoxConstraints(maxHeight: 35),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-              ),
-              hintText: "输入 0~99 数字",
-              hintStyle: TextStyle(fontSize: 14)),
-        ),
-      ),
+      appBar: GuessAppBar(),
       body: Stack(
         children: [
           Column(
             children: [
-                Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: Colors.redAccent,
-                      child: Text(
-                        '大了',
-                        style: TextStyle(
-                            fontSize: 54,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )),
-              // Spacer(),
-              Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.blueAccent,
-                    child: Text(
-                      '小了',
-                      style: TextStyle(
-                          fontSize: 54,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )),
+              ResultNotice(color:Colors.redAccent,info:'大了'),
+              ResultNotice(color:Colors.blueAccent,info:'小了'),
             ],
           ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('点击生成随机数值',),
+                const Text(
+                  '点击生成随机数值',
+                ),
                 Text(
                   '$_value',
                   style: Theme.of(context).textTheme.headlineMedium,
