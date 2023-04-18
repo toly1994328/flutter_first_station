@@ -19,7 +19,7 @@ class _GuessPageState extends State<GuessPage> {
 
   Random _random = Random();
   bool _guessing = false;
-
+  bool? _isBig;
 
   @override
   void dispose() {
@@ -37,8 +37,24 @@ class _GuessPageState extends State<GuessPage> {
 
   TextEditingController _guessCtrl = TextEditingController();
 
-  void _onCheck(){
+  void _onCheck() {
     print("=====Check:目标数值:$_value=====${_guessCtrl.text}============");
+    int? guessValue = int.tryParse(_guessCtrl.text);
+    // 游戏未开始，或者输入非整数，无视
+    if (!_guessing || guessValue == null) return;
+
+    //猜对了
+    if (guessValue == _value) {
+      setState(() {
+        _isBig = null;
+        _guessing = false;
+      });
+      return;
+    }
+    // 猜错了
+    setState(() {
+      _isBig = guessValue > _value;
+    });
   }
 
   @override
@@ -50,21 +66,28 @@ class _GuessPageState extends State<GuessPage> {
       ),
       body: Stack(
         children: [
-          // Column(
-          //   children: [
-          //     ResultNotice(color:Colors.redAccent,info:'大了'),
-          //     ResultNotice(color:Colors.blueAccent,info:'小了'),
-          //   ],
-          // ),
+          if(_isBig!=null)
+          Column(
+            children: [
+              if(_isBig!)
+              ResultNotice(color:Colors.redAccent,info:'大了'),
+              Spacer(),
+              if(!_isBig!)
+              ResultNotice(color:Colors.blueAccent,info:'小了'),
+            ],
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                if(!_guessing)
-                const Text('点击生成随机数值',),
+                if (!_guessing)
+                  const Text(
+                    '点击生成随机数值',
+                  ),
                 Text(
                   _guessing ? '**' : '$_value',
-                  style: const TextStyle(fontSize: 68, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 68, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -72,7 +95,7 @@ class _GuessPageState extends State<GuessPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _guessing?null:_generateRandomValue,
+        onPressed: _guessing ? null : _generateRandomValue,
         backgroundColor: _guessing ? Colors.grey : Colors.blue,
         tooltip: 'Increment',
         child: const Icon(Icons.generating_tokens_outlined),
