@@ -18,10 +18,13 @@ class _GuessPageState extends State<GuessPage> {
   int _value = 0;
 
   Random _random = Random();
+  bool _guessing = false;
 
   void _generateRandomValue() {
     setState(() {
+      _guessing = true;
       _value = _random.nextInt(100);
+      print(_value);
     });
   }
 
@@ -31,22 +34,21 @@ class _GuessPageState extends State<GuessPage> {
       appBar: GuessAppBar(),
       body: Stack(
         children: [
-          Column(
-            children: [
-              ResultNotice(color:Colors.redAccent,info:'大了'),
-              ResultNotice(color:Colors.blueAccent,info:'小了'),
-            ],
-          ),
+          // Column(
+          //   children: [
+          //     ResultNotice(color:Colors.redAccent,info:'大了'),
+          //     ResultNotice(color:Colors.blueAccent,info:'小了'),
+          //   ],
+          // ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text(
-                  '点击生成随机数值',
-                ),
+                if(!_guessing)
+                const Text('点击生成随机数值',),
                 Text(
-                  '$_value',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  _guessing ? '**' : '$_value',
+                  style: const TextStyle(fontSize: 68, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -54,7 +56,8 @@ class _GuessPageState extends State<GuessPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _generateRandomValue,
+        onPressed: _guessing?null:_generateRandomValue,
+        backgroundColor: _guessing ? Colors.grey : Colors.blue,
         tooltip: 'Increment',
         child: const Icon(Icons.generating_tokens_outlined),
       ),
