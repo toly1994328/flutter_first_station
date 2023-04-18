@@ -20,6 +20,13 @@ class _GuessPageState extends State<GuessPage> {
   Random _random = Random();
   bool _guessing = false;
 
+
+  @override
+  void dispose() {
+    _guessCtrl.dispose();
+    super.dispose();
+  }
+
   void _generateRandomValue() {
     setState(() {
       _guessing = true;
@@ -28,10 +35,19 @@ class _GuessPageState extends State<GuessPage> {
     });
   }
 
+  TextEditingController _guessCtrl = TextEditingController();
+
+  void _onCheck(){
+    print("=====Check:目标数值:$_value=====${_guessCtrl.text}============");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GuessAppBar(),
+      appBar: GuessAppBar(
+        controller: _guessCtrl,
+        onCheck: _onCheck,
+      ),
       body: Stack(
         children: [
           // Column(
