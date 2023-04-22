@@ -14,15 +14,23 @@ class ResultNotice extends StatefulWidget {
   State<ResultNotice> createState() => _ResultNoticeState();
 }
 
-class _ResultNoticeState extends State<ResultNotice> with SingleTickerProviderStateMixin{
-
+class _ResultNoticeState extends State<ResultNotice> with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this,duration: const Duration(milliseconds: 200));
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
     controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -34,19 +42,21 @@ class _ResultNoticeState extends State<ResultNotice> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Container(
-          alignment: Alignment.center,
-          color: widget.color,
-          child: AnimatedBuilder(
-            animation: controller,
-            builder: (_,child) => Text(
-              widget.info,
-              style: TextStyle(
-                  fontSize: 54*(controller.value),
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
+      child: Container(
+        alignment: Alignment.center,
+        color: widget.color,
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (_, child) => Text(
+            widget.info,
+            style: TextStyle(
+              fontSize: 54 * (controller.value),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
