@@ -14,16 +14,30 @@ class GuessPage extends StatefulWidget {
   State<GuessPage> createState() => _GuessPageState();
 }
 
-class _GuessPageState extends State<GuessPage> {
+class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMixin{
+
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+  }
+
   int _value = 0;
 
   Random _random = Random();
   bool _guessing = false;
   bool? _isBig;
 
+
   @override
   void dispose() {
     _guessCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -42,7 +56,7 @@ class _GuessPageState extends State<GuessPage> {
     int? guessValue = int.tryParse(_guessCtrl.text);
     // 游戏未开始，或者输入非整数，无视
     if (!_guessing || guessValue == null) return;
-
+    controller.forward(from: 0);
     //猜对了
     if (guessValue == _value) {
       setState(() {
@@ -70,10 +84,10 @@ class _GuessPageState extends State<GuessPage> {
           Column(
             children: [
               if(_isBig!)
-              ResultNotice(color:Colors.redAccent,info:'大了'),
+              ResultNotice(color:Colors.redAccent,info:'大了',controller: controller,),
               Spacer(),
               if(!_isBig!)
-              ResultNotice(color:Colors.blueAccent,info:'小了'),
+              ResultNotice(color:Colors.blueAccent,info:'小了',controller: controller,),
             ],
           ),
           Center(
