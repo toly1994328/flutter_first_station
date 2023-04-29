@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_first_station/muyu/muyu_image.dart';
 
 import 'count_panel.dart';
 
@@ -36,21 +37,17 @@ class _MuyuPageState extends State<MuyuPage> {
               onTapSwitchImage: _onTapSwitchImage,
             ),
           ),
-          Expanded(child: _buildImage()),
+          Expanded(
+            child: MuyuAssetsImage(
+              image: 'assets/images/muyu.png',
+            ),
+          ),
         ],
       ),
     );
   }
 
   void _toHistory() {}
-
-  Widget _buildImage() {
-    return Center(
-        child: Image.asset(
-      'assets/images/muyu.png',
-      height: 200,
-    ));
-  }
 
   void _onTapSwitchAudio() {}
 
