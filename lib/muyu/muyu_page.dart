@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'count_panel.dart';
+
 class MuyuPage extends StatefulWidget {
   const MuyuPage({Key? key}) : super(key: key);
 
@@ -27,7 +29,13 @@ class _MuyuPageState extends State<MuyuPage> {
       ),
       body: Column(
         children: [
-          Expanded(child: _buildTopContent()),
+          Expanded(
+            child: CountPanel(
+              count: 0,
+              onTapSwitchAudio: _onTapSwitchAudio,
+              onTapSwitchImage: _onTapSwitchImage,
+            ),
+          ),
           Expanded(child: _buildImage()),
         ],
       ),
@@ -36,48 +44,6 @@ class _MuyuPageState extends State<MuyuPage> {
 
   void _toHistory() {}
 
-  Widget _buildTopContent() {
-    final ButtonStyle style = ElevatedButton.styleFrom(
-      minimumSize: const Size(36, 36),
-      padding: EdgeInsets.zero,
-      backgroundColor: Colors.green,
-      elevation: 0,
-    );
-
-    return Stack(
-      children: [
-        Center(
-          child: Text(
-            '功德数: 0',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Positioned(
-            right: 10,
-            top: 10,
-            child: Wrap(
-              spacing: 8,
-              direction: Axis.vertical,
-              children: [
-                ElevatedButton(
-                  style: style,
-                  onPressed: () {},
-                  child: Icon(Icons.music_note_outlined),
-                ),
-                ElevatedButton(
-                  style: style,
-                  onPressed: () {},
-                  child: Icon(Icons.image),
-                )
-              ],
-            )),
-      ],
-    );
-  }
-
   Widget _buildImage() {
     return Center(
         child: Image.asset(
@@ -85,4 +51,8 @@ class _MuyuPageState extends State<MuyuPage> {
       height: 200,
     ));
   }
+
+  void _onTapSwitchAudio() {}
+
+  void _onTapSwitchImage() {}
 }
