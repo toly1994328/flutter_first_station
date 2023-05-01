@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_first_station/muyu/muyu_image.dart';
@@ -12,6 +14,10 @@ class MuyuPage extends StatefulWidget {
 }
 
 class _MuyuPageState extends State<MuyuPage> {
+
+  int _counter = 0;
+  final Random _random = Random();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +38,7 @@ class _MuyuPageState extends State<MuyuPage> {
         children: [
           Expanded(
             child: CountPanel(
-              count: 0,
+              count: _counter,
               onTapSwitchAudio: _onTapSwitchAudio,
               onTapSwitchImage: _onTapSwitchImage,
             ),
@@ -40,6 +46,7 @@ class _MuyuPageState extends State<MuyuPage> {
           Expanded(
             child: MuyuAssetsImage(
               image: 'assets/images/muyu.png',
+              onTap: _onKnock,
             ),
           ),
         ],
@@ -52,4 +59,10 @@ class _MuyuPageState extends State<MuyuPage> {
   void _onTapSwitchAudio() {}
 
   void _onTapSwitchImage() {}
+
+  void _onKnock() {
+    setState(() {
+      _counter += 1 + _random.nextInt(3);
+    });
+  }
 }
