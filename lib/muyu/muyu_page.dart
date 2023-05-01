@@ -21,7 +21,7 @@ class _MuyuPageState extends State<MuyuPage> {
             statusBarIconBrightness: Brightness.dark,
             statusBarColor: Colors.transparent),
         backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(color: Colors.black),
+        titleTextStyle: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text("电子木鱼"),
         actions: [
