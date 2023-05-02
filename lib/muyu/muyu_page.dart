@@ -62,7 +62,8 @@ class _MuyuPageState extends State<MuyuPage> {
 
   void _onKnock() {
     setState(() {
-      _counter += 1 + _random.nextInt(3);
+      int addCount = 1 + _random.nextInt(3);
+      _counter += addCount;
     });
   }
 }
