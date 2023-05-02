@@ -18,8 +18,10 @@ class _FadTextState extends State<AnimateText> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     opacity = Tween(begin: 1.0, end: 0.0).animate(controller);
+    scale = Tween(begin: 1.0, end: 0.9).animate(controller);
+    position = Tween<Offset>(begin: const Offset(0, 2), end: Offset.zero,).animate(controller);
     controller.forward();
   }
 
@@ -37,9 +39,14 @@ class _FadTextState extends State<AnimateText> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: opacity,
-      child: Text(widget.text),
+    return ScaleTransition(
+      scale: scale,
+      child: SlideTransition(
+          position: position,
+          child: FadeTransition(
+            opacity: opacity,
+            child: Text(widget.text),
+          )),
     );
   }
 }
