@@ -17,7 +17,7 @@ class MuyuPage extends StatefulWidget {
 
 class _MuyuPageState extends State<MuyuPage> {
   int _counter = 0;
-  int _cruValue = 2;
+  int _cruValue = 0;
 
   final Random _random = Random();
 
