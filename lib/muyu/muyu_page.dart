@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_first_station/muyu/animate_text.dart';
 import 'muyu_image.dart';
 
 import 'count_panel.dart';
@@ -16,6 +17,8 @@ class MuyuPage extends StatefulWidget {
 
 class _MuyuPageState extends State<MuyuPage> {
   int _counter = 0;
+  int _cruValue = 2;
+
   final Random _random = Random();
 
   AudioPool? pool;
@@ -49,9 +52,15 @@ class _MuyuPageState extends State<MuyuPage> {
             ),
           ),
           Expanded(
-            child: MuyuAssetsImage(
-              image: 'assets/images/muyu.png',
-              onTap: _onKnock,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                MuyuAssetsImage(
+                  image: 'assets/images/muyu.png',
+                  onTap: _onKnock,
+                ),
+                if (_cruValue != 0) AnimateText(text: '功德+$_cruValue')
+              ],
             ),
           ),
         ],
@@ -68,8 +77,8 @@ class _MuyuPageState extends State<MuyuPage> {
   void _onKnock() {
     pool?.start();
     setState(() {
-      int addCount = 1 + _random.nextInt(3);
-      _counter += addCount;
+      _cruValue = 1 + _random.nextInt(3);
+      _counter += _cruValue;
     });
   }
 }
