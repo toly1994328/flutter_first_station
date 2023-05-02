@@ -1,10 +1,13 @@
 import 'dart:math';
 
+// import 'package:audioplayers/audioplayers.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_first_station/muyu/muyu_image.dart';
 
 import 'count_panel.dart';
+import 'muyu_app_bar.dart';
 
 class MuyuPage extends StatefulWidget {
   const MuyuPage({Key? key}) : super(key: key);
@@ -14,25 +17,29 @@ class MuyuPage extends StatefulWidget {
 }
 
 class _MuyuPageState extends State<MuyuPage> {
-
   int _counter = 0;
   final Random _random = Random();
+
+  AudioPool? pool;
+
+  @override
+  void initState() {
+    super.initState();
+    _initAudioPool();
+  }
+
+  void _initAudioPool() async {
+    pool = await FlameAudio.createPool(
+      'muyu_1.mp3',
+      maxPlayers: 1,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-            statusBarColor: Colors.transparent),
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text("电子木鱼"),
-        actions: [
-          IconButton(onPressed: _toHistory, icon: const Icon(Icons.history))
-        ],
+      appBar: MuyuAppBar(
+        onTapHistory: _toHistory,
       ),
       body: Column(
         children: [
@@ -61,6 +68,7 @@ class _MuyuPageState extends State<MuyuPage> {
   void _onTapSwitchImage() {}
 
   void _onKnock() {
+    pool?.start();
     setState(() {
       int addCount = 1 + _random.nextInt(3);
       _counter += addCount;
