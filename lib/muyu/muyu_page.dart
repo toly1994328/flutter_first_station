@@ -35,7 +35,6 @@ class _MuyuPageState extends State<MuyuPage> {
 
   List<MeritRecord> _records = [];
 
-
   final List<AudioOption> audioOptions = const [
     AudioOption('音效1', 'muyu_1.mp3'),
     AudioOption('音效2', 'muyu_2.mp3'),
@@ -85,7 +84,8 @@ class _MuyuPageState extends State<MuyuPage> {
                   image: activeImage,
                   onTap: _onKnock,
                 ),
-                if (_cruRecord != null) AnimateText(record: _cruRecord!,)
+                if (_cruRecord != null)
+                  AnimateText(record: _cruRecord!)
               ],
             ),
           ),
@@ -95,7 +95,13 @@ class _MuyuPageState extends State<MuyuPage> {
   }
 
   void _toHistory() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>RecordHistory(record: _records.reversed.toList())));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => RecordHistory(
+          records: _records.reversed.toList(),
+        ),
+      ),
+    );
   }
 
   void _onTapSwitchAudio() {
@@ -159,7 +165,7 @@ class _MuyuPageState extends State<MuyuPage> {
 
   String get activeAudio => audioOptions[_activeAudioIndex].src;
 
-  void _onSelectAudio(int value) async{
+  void _onSelectAudio(int value) async {
     Navigator.of(context).pop();
     if (value == _activeAudioIndex) return;
     _activeAudioIndex = value;
