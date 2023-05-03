@@ -4,6 +4,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_station/muyu/animate_text.dart';
+import 'package:flutter_first_station/muyu/options/select_audio.dart';
+import 'models/audio_option.dart';
 import 'models/image_option.dart';
 import 'muyu_image.dart';
 
@@ -21,9 +23,17 @@ class MuyuPage extends StatefulWidget {
 class _MuyuPageState extends State<MuyuPage> {
   int _counter = 0;
   int _cruValue = 0;
+
   int _activeImageIndex = 0;
+  int _activeAudioIndex = 0;
 
   final Random _random = Random();
+
+  final List<AudioOption> audioOptions = const [
+    AudioOption('音效1', 'muyu_1.mp3'),
+    AudioOption('音效2', 'muyu_2.mp3'),
+    AudioOption('音效3', 'muyu_3.mp3'),
+  ];
 
   final List<ImageOption> imageOptions = const [
     ImageOption('基础版', 'assets/images/muyu.png', 1, 3),
@@ -79,7 +89,18 @@ class _MuyuPageState extends State<MuyuPage> {
 
   void _toHistory() {}
 
-  void _onTapSwitchAudio() {}
+  void _onTapSwitchAudio() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return AudioOptionPanel(
+          audioOptions: audioOptions,
+          activeIndex: _activeAudioIndex,
+          onSelect: _onSelectAudio,
+        );
+      },
+    );
+  }
 
   void _onTapSwitchImage() {
     showCupertinoModalPopup(
@@ -107,15 +128,26 @@ class _MuyuPageState extends State<MuyuPage> {
   int get knockValue {
     int min = imageOptions[_activeImageIndex].min;
     int max = imageOptions[_activeImageIndex].max;
-    return min + _random.nextInt(max+1 - min);
+    return min + _random.nextInt(max + 1 - min);
   }
-
 
   void _onSelectImage(int value) {
     Navigator.of(context).pop();
-    if(value == _activeImageIndex) return;
+    if (value == _activeImageIndex) return;
     setState(() {
       _activeImageIndex = value;
     });
+  }
+
+  String get activeAudio => audioOptions[_activeAudioIndex].src;
+
+  void _onSelectAudio(int value) async{
+    Navigator.of(context).pop();
+    if (value == _activeAudioIndex) return;
+    _activeAudioIndex = value;
+    pool = await FlameAudio.createPool(
+      activeAudio,
+      maxPlayers: 1,
+    );
   }
 }
