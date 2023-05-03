@@ -5,13 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_station/muyu/animate_text.dart';
 import 'package:flutter_first_station/muyu/options/select_audio.dart';
+import 'package:uuid/uuid.dart';
 import 'models/audio_option.dart';
 import 'models/image_option.dart';
+import 'models/merit_record.dart';
 import 'muyu_image.dart';
 
 import 'count_panel.dart';
 import 'muyu_app_bar.dart';
 import 'options/select_image.dart';
+import 'record_history.dart';
 
 class MuyuPage extends StatefulWidget {
   const MuyuPage({Key? key}) : super(key: key);
@@ -22,12 +25,16 @@ class MuyuPage extends StatefulWidget {
 
 class _MuyuPageState extends State<MuyuPage> {
   int _counter = 0;
-  int _cruValue = 0;
+  MeritRecord? _cruRecord;
 
   int _activeImageIndex = 0;
   int _activeAudioIndex = 0;
 
   final Random _random = Random();
+  final Uuid uuid = Uuid();
+
+  List<MeritRecord> _records = [];
+
 
   final List<AudioOption> audioOptions = const [
     AudioOption('音效1', 'muyu_1.mp3'),
@@ -78,7 +85,7 @@ class _MuyuPageState extends State<MuyuPage> {
                   image: activeImage,
                   onTap: _onKnock,
                 ),
-                if (_cruValue != 0) AnimateText(text: '功德+$_cruValue')
+                if (_cruRecord != null) AnimateText(record: _cruRecord!,)
               ],
             ),
           ),
@@ -87,7 +94,9 @@ class _MuyuPageState extends State<MuyuPage> {
     );
   }
 
-  void _toHistory() {}
+  void _toHistory() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>RecordHistory(record: _records.reversed.toList())));
+  }
 
   void _onTapSwitchAudio() {
     showCupertinoModalPopup(
@@ -118,8 +127,17 @@ class _MuyuPageState extends State<MuyuPage> {
   void _onKnock() {
     pool?.start();
     setState(() {
-      _cruValue = knockValue;
-      _counter += _cruValue;
+      String id = uuid.v4();
+      _cruRecord = MeritRecord(
+        id,
+        DateTime.now().millisecondsSinceEpoch,
+        knockValue,
+        activeImage,
+        audioOptions[_activeAudioIndex].name,
+      );
+      _counter += _cruRecord!.value;
+      // 添加功德记录
+      _records.add(_cruRecord!);
     });
   }
 
