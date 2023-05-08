@@ -2,7 +2,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_first_station/paper/conform_dialog.dart';
 
+import 'model.dart';
 import 'paper_app_bar.dart';
 
 class Paper extends StatefulWidget {
@@ -13,76 +15,99 @@ class Paper extends StatefulWidget {
 }
 
 class _PaperState extends State<Paper> {
+  List<Line> _lines = []; // 线列表
+
+  int _activeColorIndex = 0; // 颜色激活索引
+  int _activeStorkWidthIndex = 0; // 线宽激活索引
+
+  // 支持的颜色
+  final List<Color> supportColors = [
+    Colors.black, Colors.red, Colors.orange,
+    Colors.yellow, Colors.green, Colors.blue,
+    Colors.indigo, Colors.purple,
+  ];
+
+  // 支持的线粗
+  final List<double> supportStorkWidths = [1,2, 4, 6, 8, 10];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PaperAppBar(
-        onClear: _clear,
+        onClear: _showClearDialog,
       ),
-      body: CustomPaint(
-        painter: PaperPainter(),
-        child: ConstrainedBox(constraints: const BoxConstraints.expand()),
+      body: GestureDetector(
+        onPanStart: _onPanStart,
+        onPanUpdate: _onPanUpdate,
+        child: CustomPaint(
+          painter: PaperPainter(
+            lines: _lines
+          ),
+          child: ConstrainedBox(constraints: const BoxConstraints.expand()),
+        ),
       ),
     );
   }
 
-  void _clear() {}
+  void _showClearDialog() {
+    String msg = "您的当前操作会清空绘制内容，是否确定删除!";
+    showDialog(
+        context: context,
+        builder: (ctx) => ConformDialog(
+          title: '清空提示',
+          conformText: '确定',
+          msg: msg,
+          onConform: _clear,
+        ));
+  }
+
+  void _clear(){
+    _lines.clear();
+    Navigator.of(context).pop();
+    setState(() {
+
+    });
+  }
+
+  void _onPanStart(DragStartDetails details) {
+    _lines.add(Line(points: [details.localPosition],));
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    _lines.last.points.add(details.localPosition);
+    setState(() {
+
+    });
+  }
 }
 
 class PaperPainter extends CustomPainter {
+  PaperPainter({
+    required this.lines,
+  }) {
+    _paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+  }
+
+  late Paint _paint;
+  final List<Line> lines;
+
   @override
   void paint(Canvas canvas, Size size) {
-    // List<Offset> points = const [
-    //   Offset(100,100),
-    //   Offset(100,150),
-    //   Offset(150,150),
-    //   Offset(200,100),
-    // ];
-    //
-    // paint.strokeWidth = 10;
-    //
-    // paint.strokeCap = StrokeCap.round;
-    //
-    //
-    // canvas.drawPoints(PointMode.polygon, points , paint);
-    // canvas.translate(0, 150);
-    Paint paint = Paint();
+    for (int i = 0; i < lines.length; i++) {
+      drawLine(canvas, lines[i]);
+    }
+  }
 
-    canvas.drawCircle(Offset(100, 100), 50, paint);
-    paint.style = PaintingStyle.stroke;
-    canvas.drawCircle(Offset(250, 100), 50, paint);
-    canvas.translate(0, 150);
-
-    paint.strokeWidth = 2;
-    Rect rect = Rect.fromCenter(center: Offset(100, 100), width: 100, height: 80);
-    canvas.drawRect(rect, paint);
-    paint.style = PaintingStyle.fill;
-    RRect rrect = RRect.fromRectXY(rect.translate(150, 0), 8, 8);
-    canvas.drawRRect(rrect, paint);
-
-    canvas.translate(0, 150);
-    paint.strokeWidth = 2;
-    Rect overRect = Rect.fromCenter(center: Offset(100, 100), width: 100, height: 80);
-    canvas.drawOval(overRect, paint);
-    paint.style = PaintingStyle.stroke;
-    canvas.drawArc(overRect.translate(150, 0), 0, pi*1.3,true,paint);
-    // RRect rrect = RRect.fromRectXY(rect.translate(150, 0), 8, 8);
-    // canvas.drawRRect(rrect, paint);
-
-
-    // paint.style = PaintingStyle.stroke;
-    // canvas.drawCircle(Offset(250, 100), 50, paint);
-
-    // paint.color = Colors.red;
-    // paint.style = PaintingStyle.stroke;
-    // paint.strokeJoin = StrokeJoin.round;
-    // canvas.drawPoints(PointMode.polygon, points , paint);
-    // canvas.translate(0, 150);
-    //
-    // paint.color = Colors.blue;
-    // canvas.drawPoints(PointMode.polygon, points , paint);
+  ///根据点位绘制线
+  void drawLine(Canvas canvas, Line line) {
+    _paint.color = line.color;
+    _paint.strokeWidth = line.strokeWidth;
+    canvas.drawPoints(PointMode.polygon, line.points, _paint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
