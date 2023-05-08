@@ -6,6 +6,7 @@ import 'package:flutter_first_station/paper/conform_dialog.dart';
 
 import 'model.dart';
 import 'paper_app_bar.dart';
+import 'stork_width_selector.dart';
 
 class Paper extends StatefulWidget {
   const Paper({Key? key}) : super(key: key);
@@ -22,14 +23,18 @@ class _PaperState extends State<Paper> {
 
   // 支持的颜色
   final List<Color> supportColors = [
-    Colors.black, Colors.red, Colors.orange,
-    Colors.yellow, Colors.green, Colors.blue,
-    Colors.indigo, Colors.purple,
+    Colors.black,
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.indigo,
+    Colors.purple,
   ];
 
   // 支持的线粗
-  final List<double> supportStorkWidths = [1,2, 4, 6, 8, 10];
-
+  final List<double> supportStorkWidths = [1, 2, 4, 6, 8, 10];
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +42,26 @@ class _PaperState extends State<Paper> {
       appBar: PaperAppBar(
         onClear: _showClearDialog,
       ),
-      body: GestureDetector(
-        onPanStart: _onPanStart,
-        onPanUpdate: _onPanUpdate,
-        child: CustomPaint(
-          painter: PaperPainter(
-            lines: _lines
+      body: Stack(
+        children: [
+          GestureDetector(
+            onPanStart: _onPanStart,
+            onPanUpdate: _onPanUpdate,
+            child: CustomPaint(
+              painter: PaperPainter(lines: _lines),
+              child: ConstrainedBox(constraints: const BoxConstraints.expand()),
+            ),
           ),
-          child: ConstrainedBox(constraints: const BoxConstraints.expand()),
-        ),
+          Positioned(
+              bottom: 0,
+              right: 10,
+              child: StorkWidthSelector(
+                supportStorkWidths: supportStorkWidths,
+                color: Colors.black,
+                activeIndex: _activeStorkWidthIndex,
+                onSelect: _onSelectStorkWidth,
+              )),
+        ],
       ),
     );
   }
@@ -55,30 +71,37 @@ class _PaperState extends State<Paper> {
     showDialog(
         context: context,
         builder: (ctx) => ConformDialog(
-          title: '清空提示',
-          conformText: '确定',
-          msg: msg,
-          onConform: _clear,
-        ));
+              title: '清空提示',
+              conformText: '确定',
+              msg: msg,
+              onConform: _clear,
+            ));
   }
 
-  void _clear(){
+  void _clear() {
     _lines.clear();
     Navigator.of(context).pop();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void _onPanStart(DragStartDetails details) {
-    _lines.add(Line(points: [details.localPosition],));
+    _lines.add(Line(
+      points: [details.localPosition],
+      strokeWidth: supportStorkWidths[_activeStorkWidthIndex],
+    ));
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     _lines.last.points.add(details.localPosition);
-    setState(() {
+    setState(() {});
+  }
 
-    });
+  void _onSelectStorkWidth(int index) {
+    if (index != _activeStorkWidthIndex) {
+      setState(() {
+        _activeStorkWidthIndex = index;
+      });
+    }
   }
 }
 
