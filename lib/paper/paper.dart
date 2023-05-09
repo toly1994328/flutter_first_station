@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_first_station/paper/color_selector.dart';
 import 'package:flutter_first_station/paper/conform_dialog.dart';
 
 import 'model.dart';
@@ -31,6 +32,17 @@ class _PaperState extends State<Paper> {
     Colors.blue,
     Colors.indigo,
     Colors.purple,
+    Colors.pink,
+
+    // Colors.grey,
+    // Colors.redAccent,
+    // Colors.orangeAccent,
+    // Colors.yellowAccent,
+    // Colors.greenAccent,
+    // Colors.blueAccent,
+    // Colors.indigoAccent,
+    // Colors.purpleAccent,
+    // Colors.pinkAccent,
   ];
 
   // 支持的线粗
@@ -43,6 +55,7 @@ class _PaperState extends State<Paper> {
         onClear: _showClearDialog,
       ),
       body: Stack(
+        alignment: Alignment.bottomLeft,
         children: [
           GestureDetector(
             onPanStart: _onPanStart,
@@ -53,14 +66,23 @@ class _PaperState extends State<Paper> {
             ),
           ),
           Positioned(
-              bottom: 0,
-              right: 10,
-              child: StorkWidthSelector(
-                supportStorkWidths: supportStorkWidths,
-                color: Colors.black,
-                activeIndex: _activeStorkWidthIndex,
-                onSelect: _onSelectStorkWidth,
-              )),
+            bottom: 40,
+            child: ColorSelector(
+              supportColors: supportColors,
+              activeIndex: _activeColorIndex,
+              onSelect: _onSelectColor,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 10,
+            child:  StorkWidthSelector(
+              supportStorkWidths: supportStorkWidths,
+              color: supportColors[_activeColorIndex],
+              activeIndex: _activeStorkWidthIndex,
+              onSelect: _onSelectStorkWidth,
+            )
+          ),
         ],
       ),
     );
@@ -88,6 +110,7 @@ class _PaperState extends State<Paper> {
     _lines.add(Line(
       points: [details.localPosition],
       strokeWidth: supportStorkWidths[_activeStorkWidthIndex],
+      color: supportColors[_activeColorIndex],
     ));
   }
 
@@ -100,6 +123,14 @@ class _PaperState extends State<Paper> {
     if (index != _activeStorkWidthIndex) {
       setState(() {
         _activeStorkWidthIndex = index;
+      });
+    }
+  }
+
+  void _onSelectColor(int index) {
+    if (index != _activeColorIndex) {
+      setState(() {
+        _activeColorIndex = index;
       });
     }
   }
