@@ -34,15 +34,15 @@ class _PaperState extends State<Paper> {
     Colors.purple,
     Colors.pink,
 
-    // Colors.grey,
-    // Colors.redAccent,
-    // Colors.orangeAccent,
-    // Colors.yellowAccent,
-    // Colors.greenAccent,
-    // Colors.blueAccent,
-    // Colors.indigoAccent,
-    // Colors.purpleAccent,
-    // Colors.pinkAccent,
+    Colors.grey,
+    Colors.redAccent,
+    Colors.orangeAccent,
+    Colors.yellowAccent,
+    Colors.greenAccent,
+    Colors.blueAccent,
+    Colors.indigoAccent,
+    Colors.purpleAccent,
+    Colors.pinkAccent,
   ];
 
   // 支持的线粗
@@ -55,7 +55,6 @@ class _PaperState extends State<Paper> {
         onClear: _showClearDialog,
       ),
       body: Stack(
-        alignment: Alignment.bottomLeft,
         children: [
           GestureDetector(
             onPanStart: _onPanStart,
@@ -66,22 +65,25 @@ class _PaperState extends State<Paper> {
             ),
           ),
           Positioned(
-            bottom: 40,
-            child: ColorSelector(
-              supportColors: supportColors,
-              activeIndex: _activeColorIndex,
-              onSelect: _onSelectColor,
-            ),
-          ),
-          Positioned(
             bottom: 0,
-            right: 10,
-            child:  StorkWidthSelector(
-              supportStorkWidths: supportStorkWidths,
-              color: supportColors[_activeColorIndex],
-              activeIndex: _activeStorkWidthIndex,
-              onSelect: _onSelectStorkWidth,
-            )
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ColorSelector(
+                    supportColors: supportColors,
+                    activeIndex: _activeColorIndex,
+                    onSelect: _onSelectColor,
+                  ),
+                ),
+                StorkWidthSelector(
+                  supportStorkWidths: supportStorkWidths,
+                  color: supportColors[_activeColorIndex],
+                  activeIndex: _activeStorkWidthIndex,
+                  onSelect: _onSelectStorkWidth,
+                ),
+              ],
+            ),
           ),
         ],
       ),
