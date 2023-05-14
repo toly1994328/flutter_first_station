@@ -181,7 +181,7 @@ class PaperPainter extends CustomPainter {
   void drawLine(Canvas canvas, Line line) {
     _paint.color = line.color;
     _paint.strokeWidth = line.strokeWidth;
-    canvas.drawPoints(PointMode.points, line.points, _paint);
+    canvas.drawPoints(PointMode.polygon, line.points, _paint);
   }
 
   @override

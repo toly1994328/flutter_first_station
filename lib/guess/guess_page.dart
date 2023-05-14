@@ -6,9 +6,7 @@ import 'guess_app_bar.dart';
 import 'result_notice.dart';
 
 class GuessPage extends StatefulWidget {
-  const GuessPage({super.key, required this.title});
-
-  final String title;
+  const GuessPage({super.key});
 
   @override
   State<GuessPage> createState() => _GuessPageState();

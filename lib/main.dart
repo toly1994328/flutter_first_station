@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'counter/counter_page.dart';
 import 'guess/guess_page.dart';
 import 'muyu/muyu_page.dart';
+import 'navigation/app_navigation.dart';
 import 'paper/paper.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Paper(),
+      home: const AppNavigation(),
     );
   }
 }
