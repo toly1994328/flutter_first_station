@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_first_station/storage/sp_storage.dart';
 import 'guess_app_bar.dart';
 import 'result_notice.dart';
 
@@ -23,11 +24,21 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
+    _initConfig();
+  }
+
+  void _initConfig() async{
+    Map<String,dynamic> config = await SpStorage.instance.readGuessConfig();
+    _guessing = config['guessing']??false;
+    _value = config['value']??0;
+    setState(() {
+
+    });
   }
 
   int _value = 0;
 
-  Random _random = Random();
+  final Random _random = Random();
   bool _guessing = false;
   bool? _isBig;
 
@@ -43,6 +54,7 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
     setState(() {
       _guessing = true;
       _value = _random.nextInt(100);
+      SpStorage.instance.saveGuessConfig(guessing: _guessing,value: _value);
       print(_value);
     });
   }
@@ -60,6 +72,7 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
       setState(() {
         _isBig = null;
         _guessing = false;
+        SpStorage.instance.saveGuessConfig(guessing: _guessing,value: _value);
       });
       return;
     }
@@ -116,5 +129,8 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
   }
 
   @override
+  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+
 }
