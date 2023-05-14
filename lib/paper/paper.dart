@@ -33,7 +33,6 @@ class _PaperState extends State<Paper> {
     Colors.indigo,
     Colors.purple,
     Colors.pink,
-
     Colors.grey,
     Colors.redAccent,
     Colors.orangeAccent,
@@ -48,11 +47,27 @@ class _PaperState extends State<Paper> {
   // 支持的线粗
   final List<double> supportStorkWidths = [1, 2, 4, 6, 8, 10];
 
+  List<Line> _historyLines = [];
+
+  void _back() {
+    Line line = _lines.removeLast();
+    _historyLines.add(line);
+    setState(() {});
+  }
+
+  void _revocation() {
+    Line line = _historyLines.removeLast();
+    _lines.add(line);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PaperAppBar(
         onClear: _showClearDialog,
+        onBack: _lines.isEmpty ? null : _back,
+        onRevocation: _historyLines.isEmpty ? null : _revocation,
       ),
       body: Stack(
         children: [
