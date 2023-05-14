@@ -23,7 +23,7 @@ class MuyuPage extends StatefulWidget {
   State<MuyuPage> createState() => _MuyuPageState();
 }
 
-class _MuyuPageState extends State<MuyuPage> {
+class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin {
   int _counter = 0;
   MeritRecord? _cruRecord;
 
@@ -174,4 +174,7 @@ class _MuyuPageState extends State<MuyuPage> {
       maxPlayers: 1,
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

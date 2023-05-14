@@ -12,7 +12,7 @@ class GuessPage extends StatefulWidget {
   State<GuessPage> createState() => _GuessPageState();
 }
 
-class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMixin{
+class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMixin,AutomaticKeepAliveClientMixin{
 
   late AnimationController controller;
 
@@ -114,4 +114,7 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

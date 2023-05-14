@@ -14,6 +14,7 @@ class AppNavigation extends StatefulWidget {
 
 class _AppNavigationState extends State<AppNavigation> {
   int _index = 0;
+  final PageController _ctrl = PageController();
 
   final List<MenuData> menus = const [
     MenuData(label: '猜数字', icon: Icons.question_mark),
@@ -26,7 +27,7 @@ class _AppNavigationState extends State<AppNavigation> {
     return Column(
       children: [
         Expanded(
-          child: _buildContent(_index),
+          child: _buildContent(),
         ),
         AppBottomBar(
           currentIndex: _index,
@@ -38,22 +39,22 @@ class _AppNavigationState extends State<AppNavigation> {
   }
 
   void _onChangePage(int index) {
+    _ctrl.jumpToPage(index);
     setState(() {
       _index = index;
     });
   }
 
-  Widget _buildContent(int index) {
-    switch(index){
-      case 0:
-       return const GuessPage();
-      case 1:
-        return const MuyuPage();
-      case 2:
-        return const Paper();
-      default:
-        return const SizedBox.shrink();
-    }
+  Widget _buildContent() {
+    return PageView(
+      physics: const NeverScrollableScrollPhysics(),
+      controller: _ctrl,
+      children: const [
+         GuessPage(),
+         MuyuPage(),
+         Paper(),
+      ],
+    );
   }
 }
 

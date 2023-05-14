@@ -16,7 +16,12 @@ class Paper extends StatefulWidget {
   State<Paper> createState() => _PaperState();
 }
 
-class _PaperState extends State<Paper> {
+class _PaperState extends State<Paper>  with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
+
   List<Line> _lines = []; // 线列表
 
   int _activeColorIndex = 0; // 颜色激活索引
