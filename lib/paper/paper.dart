@@ -132,8 +132,12 @@ class _PaperState extends State<Paper> {
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    _lines.last.points.add(details.localPosition);
-    setState(() {});
+    Offset point = details.localPosition;
+    double distance = (_lines.last.points.last - point).distance;
+    if (distance > 5) {
+      _lines.last.points.add(details.localPosition);
+      setState(() {});
+    }
   }
 
   void _onSelectStorkWidth(int index) {
@@ -151,6 +155,7 @@ class _PaperState extends State<Paper> {
       });
     }
   }
+
 }
 
 class PaperPainter extends CustomPainter {
@@ -176,7 +181,7 @@ class PaperPainter extends CustomPainter {
   void drawLine(Canvas canvas, Line line) {
     _paint.color = line.color;
     _paint.strokeWidth = line.strokeWidth;
-    canvas.drawPoints(PointMode.polygon, line.points, _paint);
+    canvas.drawPoints(PointMode.points, line.points, _paint);
   }
 
   @override
