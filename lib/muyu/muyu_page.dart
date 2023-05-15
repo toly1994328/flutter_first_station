@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first_station/muyu/animate_text.dart';
 import 'package:flutter_first_station/muyu/options/select_audio.dart';
 import 'package:uuid/uuid.dart';
+import '../storage/sp_storage.dart';
 import 'models/audio_option.dart';
 import 'models/image_option.dart';
 import 'models/merit_record.dart';
@@ -23,7 +24,8 @@ class MuyuPage extends StatefulWidget {
   State<MuyuPage> createState() => _MuyuPageState();
 }
 
-class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin {
+class _MuyuPageState extends State<MuyuPage>
+    with AutomaticKeepAliveClientMixin {
   int _counter = 0;
   MeritRecord? _cruRecord;
 
@@ -52,11 +54,22 @@ class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin 
   void initState() {
     super.initState();
     _initAudioPool();
+    _initConfig();
+  }
+
+  void _initConfig() async{
+    Map<String,dynamic> config = await SpStorage.instance.readMuYUConfig();
+    _counter = config['counter']??0;
+    _activeImageIndex = config['activeImageIndex']??0;
+    _activeAudioIndex = config['activeAudioIndex']??0;
+    setState(() {
+
+    });
   }
 
   void _initAudioPool() async {
     pool = await FlameAudio.createPool(
-      'muyu_1.mp3',
+      audioOptions[_activeAudioIndex].src,
       maxPlayers: 1,
     );
   }
@@ -84,8 +97,7 @@ class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin 
                   image: activeImage,
                   onTap: _onKnock,
                 ),
-                if (_cruRecord != null)
-                  AnimateText(record: _cruRecord!)
+                if (_cruRecord != null) AnimateText(record: _cruRecord!)
               ],
             ),
           ),
@@ -142,9 +154,18 @@ class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin 
         audioOptions[_activeAudioIndex].name,
       );
       _counter += _cruRecord!.value;
+      saveConfig();
       // 添加功德记录
       _records.add(_cruRecord!);
     });
+  }
+
+  void saveConfig() {
+    SpStorage.instance.saveMuYUConfig(
+      counter: _counter,
+      activeImageIndex: _activeImageIndex,
+      activeAudioIndex: _activeAudioIndex,
+    );
   }
 
   String get activeImage => imageOptions[_activeImageIndex].src;
@@ -160,6 +181,7 @@ class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin 
     if (value == _activeImageIndex) return;
     setState(() {
       _activeImageIndex = value;
+      saveConfig();
     });
   }
 
@@ -169,6 +191,7 @@ class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin 
     Navigator.of(context).pop();
     if (value == _activeAudioIndex) return;
     _activeAudioIndex = value;
+    saveConfig();
     pool = await FlameAudio.createPool(
       activeAudio,
       maxPlayers: 1,
