@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first_station/muyu/animate_text.dart';
 import 'package:flutter_first_station/muyu/options/select_audio.dart';
 import 'package:uuid/uuid.dart';
+import '../storage/db_storage/db_storage.dart';
 import '../storage/sp_storage.dart';
 import 'models/audio_option.dart';
 import 'models/image_option.dart';
@@ -62,6 +63,7 @@ class _MuyuPageState extends State<MuyuPage>
     _counter = config['counter']??0;
     _activeImageIndex = config['activeImageIndex']??0;
     _activeAudioIndex = config['activeAudioIndex']??0;
+    _records = await DbStorage.instance.meritRecordDao.query();
     setState(() {
 
     });
@@ -155,6 +157,7 @@ class _MuyuPageState extends State<MuyuPage>
       );
       _counter += _cruRecord!.value;
       saveConfig();
+      DbStorage.instance.meritRecordDao.insert(_cruRecord!);
       // 添加功德记录
       _records.add(_cruRecord!);
     });
