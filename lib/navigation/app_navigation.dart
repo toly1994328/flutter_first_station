@@ -3,6 +3,7 @@ import 'package:flutter_first_station/guess/guess_page.dart';
 import 'package:flutter_first_station/muyu/muyu_page.dart';
 import 'package:flutter_first_station/paper/paper.dart';
 
+import '../net_article/views/net_articel_page.dart';
 import 'app_bottom_bar.dart';
 
 class AppNavigation extends StatefulWidget {
@@ -20,21 +21,18 @@ class _AppNavigationState extends State<AppNavigation> {
     MenuData(label: '猜数字', icon: Icons.question_mark),
     MenuData(label: '电子木鱼', icon: Icons.my_library_music_outlined),
     MenuData(label: '白板绘制', icon: Icons.palette_outlined),
+    MenuData(label: '网络文章', icon: Icons.article_outlined),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: _buildContent(),
-        ),
-        AppBottomBar(
-          currentIndex: _index,
-          onItemTap: _onChangePage,
-          menus: menus,
-        )
-      ],
+    return Scaffold(
+      body: _buildContent(),
+      bottomNavigationBar: AppBottomBar(
+        currentIndex: _index,
+        onItemTap: _onChangePage,
+        menus: menus,
+      ),
     );
   }
 
@@ -50,11 +48,11 @@ class _AppNavigationState extends State<AppNavigation> {
       physics: const NeverScrollableScrollPhysics(),
       controller: _ctrl,
       children: const [
-         GuessPage(),
-         MuyuPage(),
-         Paper(),
+        GuessPage(),
+        MuyuPage(),
+        Paper(),
+        NetArticlePage(),
       ],
     );
   }
 }
-

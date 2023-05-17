@@ -17,30 +17,17 @@ class PaperAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      centerTitle: true,
-      elevation: 0,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent),
-      backgroundColor: Colors.white,
       leading: BackUpButtons(
         onBack: onBack,
         onRevocation: onRevocation,
       ),
       leadingWidth: 100,
-      title: Text(
-        '画板绘制',
-        style: TextStyle(color: Colors.black, fontSize: 16),
-      ),
+      title: Text('画板绘制'),
       actions: [
         IconButton(
             splashRadius: 20,
             onPressed: onClear,
-            icon: Icon(
-              CupertinoIcons.delete,
-              color: Colors.black,
-              size: 20,
-            ))
+            icon: Icon(CupertinoIcons.delete, size: 20))
       ],
     );
   }

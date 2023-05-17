@@ -12,18 +12,12 @@ class MuyuAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
-      centerTitle: true,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent),
-      backgroundColor: Colors.white,
-      titleTextStyle: const TextStyle(
-          color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-      iconTheme: const IconThemeData(color: Colors.black),
       title: const Text("电子木鱼"),
       actions: [
-        IconButton(onPressed: onTapHistory, icon: const Icon(Icons.history))
+        IconButton(
+          onPressed: onTapHistory,
+          icon: const Icon(Icons.history),
+        )
       ],
     );
   }

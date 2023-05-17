@@ -14,14 +14,7 @@ class GuessAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent),
-      titleSpacing: 0,
-      leading: Icon(
-        Icons.menu,
-        color: Colors.black,
-      ),
+      leading: Icon(Icons.menu, color: Colors.black),
       actions: [
         IconButton(
             splashRadius: 20,
@@ -31,8 +24,6 @@ class GuessAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.blue,
             ))
       ],
-      backgroundColor: Colors.white,
-      elevation: 0,
       title: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
