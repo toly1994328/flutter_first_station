@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_station/net_article/api/article_api.dart';
 import '../model/article.dart';
@@ -14,6 +15,8 @@ class _ArticleContentState extends State<ArticleContent> {
   List<Article> _articles = [];
   ArticleApi api = ArticleApi();
 
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -21,12 +24,28 @@ class _ArticleContentState extends State<ArticleContent> {
   }
 
   void _loadData() async {
+    _loading = true;
+    setState(() {});
     _articles = await api.loadArticles(0);
+    _loading = false;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    if(_loading){
+      return Center(
+        child: Wrap(
+          spacing: 10,
+          direction: Axis.vertical,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: const [
+            CupertinoActivityIndicator(),
+            Text("数据加载中，请稍后...",style: TextStyle(color: Colors.grey),)
+          ],
+        ),
+      );
+    }
     return ListView.builder(
       itemExtent: 80,
       itemCount: _articles.length,
