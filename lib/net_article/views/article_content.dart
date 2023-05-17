@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_station/net_article/api/article_api.dart';
@@ -46,11 +49,37 @@ class _ArticleContentState extends State<ArticleContent> {
         ),
       );
     }
-    return ListView.builder(
-      itemExtent: 80,
-      itemCount: _articles.length,
-      itemBuilder: _buildItemByIndex,
+    return EasyRefresh(
+      header: const ClassicHeader(
+        dragText: "下拉加载",
+        armedText: "释放刷新",
+        readyText: "开始加载",
+        processingText: "正在加载",
+        processedText: "刷新成功",
+      ),
+      footer:const ClassicFooter(
+        processingText: "正在加载"
+      ),
+      onRefresh: _onRefresh,
+      onLoad: _onLoad,
+      child: ListView.builder(
+        itemExtent: 80,
+        itemCount: _articles.length,
+        itemBuilder: _buildItemByIndex,
+      ),
     );
+  }
+
+  void _onRefresh() async{
+    _articles = await api.loadArticles(0);
+    setState(() {});
+  }
+
+  void _onLoad() async{
+    int nextPage = _articles.length%20;
+    List<Article> newArticles = await api.loadArticles(nextPage);
+    _articles = _articles + newArticles;
+    setState(() {});
   }
 
   Widget _buildItemByIndex(BuildContext context, int index) {
@@ -67,6 +96,10 @@ class _ArticleContentState extends State<ArticleContent> {
       ),
     );
   }
+
+
+
+
 }
 
 class ArticleItem extends StatelessWidget {
