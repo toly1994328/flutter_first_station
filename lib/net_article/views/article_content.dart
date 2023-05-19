@@ -76,7 +76,7 @@ class _ArticleContentState extends State<ArticleContent> {
   }
 
   void _onLoad() async{
-    int nextPage = _articles.length%20;
+    int nextPage = _articles.length ~/ 20;
     List<Article> newArticles = await api.loadArticles(nextPage);
     _articles = _articles + newArticles;
     setState(() {});
