@@ -80,6 +80,7 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
     setState(() {
       _isBig = guessValue > _value;
     });
+    _guessCtrl.clear();
   }
 
   @override
